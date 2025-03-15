@@ -1,17 +1,19 @@
+#include <map>
 #include <random>
 #include <time.h>
 #include <stdlib.h>
 #include <algorithm>
 
-const int N = 1e6 + 5;
+const long long N = 1e6 + 5;
 const long long LIM = (1ll << 15) - 1;
 
 std::random_device rd;
 std::mt19937_64 gen;
 std::uniform_int_distribution<long long> rng(0, 1);
 
-long long cache_l = 0, cache_r = 1;
+long long cache_l, cache_r;
 int per[N];
+std::map<std::pair<int, int>, bool> flag;
 
 // Set seed for random number generator
 void _set_seed() {
@@ -93,17 +95,40 @@ void _get_permutation(int n) {
   _shuffle(per, n);
 }
 
-// Get a random tree with d is the depth level
+// Get a random tree
 template<class T>
-void _get_tree(std::vector<std::pair<T, T>>& e, int n, int d = N) {
-  e.clear();
-  _get_permutation(n);
+void _get_tree(std::vector<std::pair<T, T>>& e, int n, int d) {
+  T x, y;
 
   for (int i = 2; i <= n; ++i) {
-    int x = per[i], y = per[_get_range(std::max(1, i - d), i - 1)];
+    x = per[i];
+    y = per[_get_range(std::max(1, i - d), i - 1)];
     if (_get_range(0, 1)) {
       std::swap(x, y);
     }
+    flag[std::make_pair(std::min(x, y), std::max(x, y))] = true;
+    e.push_back(std::make_pair(x, y));
+  }
+}
+
+// Get a random graph with d is the depth level
+template<class T>
+void _get_graph(std::vector<std::pair<T, T>>& e, int n, int m, int d = N) {
+  T x, y;
+  std::pair<T, T> p;
+  e.clear();
+  flag.clear();
+
+  _get_permutation(n);
+  _get_tree(e, n, d);
+
+  for (int i = n; i <= m; ++i) {
+    do {
+      x = _get_range(1, n);
+      y = _get_range(1, n);
+      p = std::make_pair(std::min(x, y), std::max(x, y));
+    } while(x == y || flag.find(p) != flag.end());
+    flag[p] = true;
     e.push_back(std::make_pair(x, y));
   }
 
