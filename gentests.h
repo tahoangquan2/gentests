@@ -6,6 +6,7 @@
 
 const long long N = 1e6 + 5;
 const long long LIM = (1ll << 15) - 1;
+const int PRIME = 1e3;
 
 std::random_device rd;
 std::mt19937_64 gen;
@@ -18,8 +19,6 @@ std::map<std::pair<int, int>, bool> flag;
 // Set seed for random number generator
 void _set_seed() {
   gen.seed(rd());
-  cache_l = 0;
-  cache_r = 1;
 }
 
 // Get a random number in [l, r]
@@ -67,7 +66,6 @@ void _shuffle(std::vector<T>& v, int l = 0, int r = -1) {
     v[i] = t[i - l];
   }
 }
-
 
 // Shuffle array with range [l, r)
 template<class T>
@@ -133,4 +131,85 @@ void _get_graph(std::vector<std::pair<T, T>>& e, int n, int m, int d = N) {
   }
 
   _shuffle(e);
+}
+
+// Calculate power
+long long _power(long long a, long long b, long long m) {
+  long long val = 1;
+  a %= m;
+
+  while (b) {
+    if (b & 1) {
+      (val *= a) %= m;
+    }
+    (a *= a) %= m;
+    b >>= 1;
+  }
+
+  return val;
+}
+
+// Miller Rabin test for prime check
+bool _miller_test(long long d, long long n, long long a) {
+  long long x = _power(a, d, n);
+  if (x == 1 || x == n - 1) {
+    return true;
+  }
+
+  while (d != n - 1) {
+    (x *= x) %= n;
+    d <<= 1;
+    if (x == 1) {
+      return false;
+    }
+    if (x == n - 1) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Check if it is a prime number
+bool _check_prime(int n) {
+  if (n < 2) {
+    return false;
+  }
+  if (n == 2 || n == 3) {
+    return true;
+  }
+  if (n % 2 == 0 || n % 3 == 0) {
+    return false;
+  }
+
+  int d = n - 1;
+  while (!(d & 1)) {
+    d >>= 1;
+  }
+
+  int bases[3] = {2, 7, 61};
+  for (int a : bases) {
+    if (n == a) {
+      return true;
+    }
+    if (!_miller_test(d, n, a)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// Get a random prime number in range [l, r]
+int _get_range_prime(int l, int r) {
+  int cnt = PRIME, x;
+
+  while (cnt--) {
+    x = _get_range(l, r);
+    if (_check_prime(x)) {
+      return x;
+    }
+  }
+
+  return -1;
 }
