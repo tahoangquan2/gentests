@@ -62,3 +62,22 @@ void _shuffle(std::vector<T>& v, int l = 0, int r = -1) {
     v[i] = t[i - l];
   }
 }
+
+
+// Shuffle array with range [l, r)
+template<class T>
+void _shuffle(T* v, int n, int l = 1, int r = -1) {
+  if (!~r) {
+    r = n;
+  }
+
+  std::vector<T> t;
+  for (int i = l; i <= r; ++i) {
+    t.push_back(v[i]);
+  }
+
+  _shuffle_vector(t);
+  for (int i = l; i <= r; ++i) {
+    v[i] = t[i - l];
+  }
+}
