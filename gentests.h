@@ -67,7 +67,7 @@ void _shuffle(std::vector<T>& v, int l = 0, int r = -1) {
   }
 }
 
-// Shuffle array with range [l, r)
+// Shuffle array with range [l, r]
 template<class T>
 void _shuffle(T* v, int n, int l = 1, int r = -1) {
   if (!~r) {
@@ -213,3 +213,11 @@ int _get_range_prime(int l, int r) {
 
   return -1;
 }
+
+// Define for shorter access
+#define _ss _set_seed
+#define _gr _get_range
+#define _grd _get_range_digit
+#define _grp _get_range_prime
+#define _s _shuffle
+#define _gg _get_graph
