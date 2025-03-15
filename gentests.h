@@ -2,13 +2,16 @@
 #include <time.h>
 #include <stdlib.h>
 #include <algorithm>
-#include <iostream>
+
+const int N = 1e6 + 5;
+const long long LIM = (1ll << 15) - 1;
 
 std::random_device rd;
 std::mt19937_64 gen;
 std::uniform_int_distribution<long long> rng(0, 1);
 
 long long cache_l = 0, cache_r = 1;
+int per[N];
 
 // Set seed for random number generator
 void _set_seed() {
@@ -29,7 +32,7 @@ long long _get_range(long long l, long long r) {
 
 // Get a random number in [l, r] with random number of digits
 long long _get_range_digit(long long l, long long r) {
-  long long val = powl(2, (long double)(63.0) / (long double)(32767) * (long double)(_get_range(0, 32767)));
+  long long val = powl(2, (long double)(63.0) / (long double)(LIM) * (long double)(_get_range(0, LIM)));
 
   return l + val % (r - l + 1);
 }
@@ -80,4 +83,29 @@ void _shuffle(T* v, int n, int l = 1, int r = -1) {
   for (int i = l; i <= r; ++i) {
     v[i] = t[i - l];
   }
+}
+
+// Get a random permutation
+void _get_permutation(int n) {
+  for (int i = 1; i <= n; ++i) {
+    per[i] = i;
+  }
+  _shuffle(per, n);
+}
+
+// Get a random tree with d is the depth level
+template<class T>
+void _get_tree(std::vector<std::pair<T, T>>& e, int n, int d = N) {
+  e.clear();
+  _get_permutation(n);
+
+  for (int i = 2; i <= n; ++i) {
+    int x = per[i], y = per[_get_range(std::max(1, i - d), i - 1)];
+    if (_get_range(0, 1)) {
+      std::swap(x, y);
+    }
+    e.push_back(std::make_pair(x, y));
+  }
+
+  _shuffle(e);
 }

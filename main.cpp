@@ -8,22 +8,16 @@ int main() {
   clock_t tStart = clock();
   _set_seed();
 
-  int a[15];
-  for(int i = 1; i <= 10; ++i) {
-    a[i] = i;
+  int n = 10;
+  vector<pair<int,int>> a;
+  _get_tree(a, n);
+  for(pair<int,int> x : a) {
+    cout << x.first << " " << x.second << "\n";
   }
-  for(int i = 1; i <= 10; ++i) {
-    cout << a[i] << " ";
-  }
-  cout << "\n";
-  _shuffle(a, 10);
-  for(int i = 1; i <= 10; ++i) {
-    cout << a[i] << " ";
-  }
-  cout << "\n";
-  _shuffle(a, 10, 3, 6);
-  for(int i = 1; i <= 10; ++i) {
-    cout << a[i] << " ";
+  cout << "---\n";
+  _get_tree(a, n, 1);
+  for(pair<int,int> x : a) {
+    cout << x.first << " " << x.second << "\n";
   }
 
   cout << "\nTime: " << (double)(clock() - tStart) / CLOCKS_PER_SEC;
