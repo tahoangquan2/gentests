@@ -1,18 +1,31 @@
 #include <iostream>
 #include "gentests.h"
 
+using namespace std;
 typedef long long ll;
 
 int main() {
   clock_t tStart = clock();
   _set_seed();
 
-  ll l = 1, r = 1e18, x;
-  for (int i = 1; i <= 100000000; ++i) {
-    x = _get_range(l, r);
+  vector<int> a;
+  for(int i = 1; i <= 10; ++i) {
+    a.push_back(i);
   }
-  std::cout << x << "\n";
+  for(int x : a) {
+    cout << x << " ";
+  }
+  cout << "\n";
+  _shuffle(a);
+  for(int x : a) {
+    cout << x << " ";
+  }
+  cout << "\n";
+  _shuffle(a, 3, 6);
+  for(int x : a) {
+    cout << x << " ";
+  }
 
-  std::cout << (double)(clock() - tStart) / CLOCKS_PER_SEC;
+  cout << "\nTime: " << (double)(clock() - tStart) / CLOCKS_PER_SEC;
   return 0;
 }
